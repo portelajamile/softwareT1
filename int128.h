@@ -5,13 +5,13 @@ typedef struct int128 {
   long low;
 } Int128;
 
-/* AtribuiÃ§Ã£o */
+/* Atribuicao */
 void int128_attr (Int128 *res, long l);
 
 /* Soma */
 void int128_add (Int128 *res, Int128 *v1, Int128 *v2);
 
-/* SubstraÃ§Ã£o */
+/* Substracao */
 void int128_sub (Int128 *res, Int128 *v1, Int128 *v2);
 
 /* Shift para esquerda */
