@@ -23,10 +23,10 @@ void int128_shr (Int128 *res, Int128 *v, int n)
 
 int int128_write(Int128 *v, FILE *f)
 {
-
+return 0;
 }
 
 int int128_read(Int128 *v, FILE *f)
 {
-
+return 0;
 }
