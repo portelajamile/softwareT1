@@ -113,5 +113,19 @@ return 0;
 
 int int128_read(Int128 *v, FILE *f)
 {
-return 0;
+		long x, y;
+	if (f == NULL)
+	{
+		printf("Erro no arquivo");
+		return 1;
+	}
+	
+	fscanf(f, "%l %l", &x, &y);
+	x = swapLong(x);
+	y = swapLong(y);
+
+	v->high = x;
+	v->low = y;
+
+	return 0;
 }
