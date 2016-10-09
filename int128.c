@@ -7,6 +7,29 @@ long getHigh (Int128 *a)
 long getLow (Int128 *a)
 { return a->low;}
 
+long swapLong(long in)
+{
+	long out;
+	char *inp = (char *)&in;
+	char *outp = (char *)&out;
+
+	int i = 0;
+	for (i = 0; i<sizeof(long); i++)
+	{
+		outp[i] = inp[(sizeof(long)-1) - i];
+	}
+
+	return out;
+}
+
+void dump(void *p, int n,FILE* f) {
+	unsigned char *p1 = p;
+	while (n--) {
+		fprintf(f,"%02x",*p1);
+		p1++;
+	}
+}
+
 
 /*Funções principais*/
 void int128_attr (Int128 *res, long l)
@@ -57,6 +80,21 @@ void int128_sub (Int128 *res, Int128 *v1, Int128 *v2)
 
 void int128_shl (Int128 *res, Int128 *v, int n)
 {
+	int i,arm;
+	if (n <= 64)
+	{
+		arm = (v->low >> 64 - n);
+		res->low = (v->low << n);
+		res->high = (v->high << n) + arm;
+	}
+
+	else if (n > 64)
+	{
+		res->low = (v->low << n);
+		n = n - 64;
+		res->high = v->low;
+		res->high = (res->high<<n);
+	}
 }
 
 void int128_shr (Int128 *res, Int128 *v, int n)
@@ -65,6 +103,11 @@ void int128_shr (Int128 *res, Int128 *v, int n)
 
 int int128_write(Int128 *v, FILE *f)
 {
+	long x, y;
+	x = swapLong(v->high);
+	y = swapLong(v->low);
+	dump(x, sizeof(x), f);
+	dump(y, sizeof(y), f);
 return 0;
 }
 
