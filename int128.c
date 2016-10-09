@@ -26,19 +26,28 @@ void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
 {
 	if(abs(v1->low+v2->low)>4294967295) //há overflow
 	{
-		// descobrir o q fazer aq
-		
+		// OVERFLOW, descobrir o q fazer aq 
 		
 	}
 	else{
+		
 		res->low=v1->low+v2->low;
-		if( (v1->high == -1 || v1->high==0)&& (v12->high == -1 || v2->high==0)) 
-			// se o high apenas representa o sinal , a resposta vai ter o sinal do maior
+		if( (v1->high == -1 || v1->high==0)&& (v1->high == -1 || v2->high==0)) 
+			// se o high dos 2 apenas representa o sinal , a resposta vai ter o sinal do maior
 			res->high=(v1->low>v2->low)? v1->high:v2->high; 
-		else 
-			
-		if(v1->high ==0 && v2->high ==0)
-			
+		else {
+			//algum ou os dois rep valor 
+			if(( v1->high == -1 && v2->high>0)|| (v2->high == -1 && v1->high>0) ) 
+				// se o high de 1 representa o sinal negativo e o outro rep valor positivo,
+				// a resposta vai ser o valor positivo
+				res->high=v1->high>v2->high)? v1->high:v2->high; 
+			else{
+				if( abs(1->high + v2->high) >0)
+						//OVERFLOW, descobrir o que fazer aq
+				else
+					res->high =v1->high +v2->high;
+		
+		}
 	}
 }
 
