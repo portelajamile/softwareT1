@@ -1,11 +1,14 @@
 #include "int128.h"
 #include <stdlib.h> 
+#define NMAX 4294967295
 
 /*Auxiliares p teste*/
 long getHigh (Int128 *a)
 { return a->high;}
 long getLow (Int128 *a)
 { return a->low;}
+
+/*Funções auxiliares */ 
 
 long swapLong(long in)
 {
@@ -30,8 +33,8 @@ void dump(void *p, int n,FILE* f) {
 	}
 }
 
-
 /*Funções principais*/
+
 void int128_attr (Int128 *res, long l)
 {	// extende com sinal (como o comando movz de assembly)
 		if(l>0){
@@ -46,39 +49,61 @@ void int128_attr (Int128 *res, long l)
 }
 
 void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
-{
-	if(abs(v1->low+v2->low)>4294967295)	{
-		// OVERFLOW, descobrir o q fazer aq 
-		
+{	//soma dois inteiros de 128 bits 
+	int s=1, t=1, d=0;
+	
+	if(v1->high<0 && v1->low>0)			//corrige sinal caso v1 seja neg
+		s=-1;
+	if(v2->high<0 && v2->low>0)			//corrige sinal caso v2 seja neg
+		t=-1;
+	
+//soma o low		
+	if( abs( s*v1->low+t*v2->low ) > NMAX )	{
+		// OVERFLOW
+		if(s*v1->low+t*v2->low <0){
+			d=s*v1->low+t*v2->low + NMAX;
+			res->high=-NMAX;
+		}
+		else{ 
+			d=s*v1->low+t*v2->low - NMAX;
+			res->high = NMAX;
+		}
 	}
-	else{
-		res->low=v1->low+v2->low;
-		if( (v1->high == -1 || v1->high==0)&& (v1->high == -1 || v2->high==0)) 
-		{
-			if (abs(v1->low)>abs(v2->low))
-				res->high = v1->high;
-			else 
-				res->high=v2->high;
-			// se o high dos 2 apenas representa o sinal , a resposta vai ter o sinal do maior
-		//	res->high=(abs(v1->low)>abs(v2->low))? v1->high:v2->high; 
+	else
+		res->low=s*v1->low+t*v2->low;
+
+// soma o high 
+
+	s=1; t=1;
+	
+	if(v1->high == -1 || v1->high==0){		//v1 representa sinal
+		s=0; 
+	if(v2->high == -1 || v2->high==0){		//v2 representa sinal
+		t=0;
+		
+	if( res->low < 0 ){					// res é negativo
+		if ( v2->high > 0)					//v2 é valor
+			t=-1;
+		if (v1->high > 0)					//v1 é valor 
+			s=-1;
+	}	
+	
+	if(s==0 && t==0){					// v1 e v2 são sinal 
+		if (d==0)
+			res->high= (res->low > 0)? 0:-1;
+		else
+			res->high = d;
+	}
+	
+	else {								// v1 e v2 são valores 
+		if( abs ( s*v1->high + t*v2->high + d ) > NMAX) {
+			//OVERFLOW
+			res->high=res->low=NULL;
+			printf("Overflow! Nao foi possivel armazenar a soma dos inteiros de 128bits.")
 		}
-		else {
-			//algum ou os dois rep valor 
-			if(( v1->high == -1 && v2->high>0)|| (v2->high == -1 && v1->high>0) ) 
-				// se o high de 1 representa o sinal negativo e o outro rep valor positivo,
-				// a resposta vai ser o valor positivo
-				res->high=(v1->high>v2->high)? v1->high:v2->high; 
-			else{
-				if( abs(v1->high + v2->high) >0){
-						//OVERFLOW, descobrir o que fazer aq
-				}
-				else
-					res->high =v1->high +v2->high;
-			}
-		}
+		res->high = s*v1->high + t*v2->high + d ;
 	}
 }
-
 
 void int128_sub (Int128 *res, Int128 *v1, Int128 *v2)
 {
