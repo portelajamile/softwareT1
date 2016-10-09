@@ -26,6 +26,13 @@ int int128_write(Int128 *v, FILE *f);
 /* Le um Int128 */
 int int128_read(Int128 *v, FILE *f);
 
+
+/*Auxiliares de teste*/
+
+long getHigh(Int128 *a);
+long getLow(Int128 *a);
+
+
 /*Operações básicas:
 A função int128_attr atribui a um inteiro de 128 bits (res) o valor signed long fornecido por l.
 As funções int128_add e int128_sub realizam, respectivamente, as operações de soma (v1 + v2) e subtração (v1 - v2) de dois inteiros de 128 bits, armazenando o resultado em res.

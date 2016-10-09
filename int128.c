@@ -1,12 +1,22 @@
 #include "int128.h"
+#include <stdlib.h> 
 
+/*Auxiliares p teste*/
+long getHigh (Int128 *a)
+{ return a->high;}
+long getLow (Int128 *a)
+{ return a->low;}
+
+
+/*Funções principais*/
 void int128_attr (Int128 *res, long l)
 {
-
+	
 }
 
 void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
 {
+
 }
 
 void int128_sub (Int128 *res, Int128 *v1, Int128 *v2)
