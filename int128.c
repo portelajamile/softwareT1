@@ -132,9 +132,7 @@ void int128_shl (Int128 *res, Int128 *v, int n)
 		j = v->low;
 		arm = (j>>(64-n));
 		res->low = (v->low << n);
-		exibeInt(res);
 		res->high = (v->high << n) + arm;
-		exibeInt(res);
 	}
 
 	else if (n >= 64)
@@ -143,7 +141,6 @@ void int128_shl (Int128 *res, Int128 *v, int n)
 		n = n - 64;
 		arm = v->low;
 		res->high = (arm << n);
-		exibeInt(res);
 	}
 }
 
