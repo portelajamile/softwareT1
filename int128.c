@@ -40,6 +40,14 @@ void dump(void *p, int n,FILE* f) {
 	}
 }
 
+int is_little_endian()
+{
+	//ADICIONAR IMPLEMENTAÇÃO
+	return 0;
+}
+
+
+
 /*Funções principais*/
 
 void int128_attr (Int128 *res, long l)
@@ -223,8 +231,8 @@ int int128_read(Int128 *v, FILE *f)
 	}
 //JAMILE - ALTEREI AQUI
 	
-	fread(x, sizeof(x), 1, f);
-	fread(y, sizeof(y), 1, f);
+	fread(&x, sizeof(x), 1, f);
+	fread(&y, sizeof(y), 1, f);
 	if(is_little_endian() == 0){
 		v->high = swapLong(y);
 		v->low = swapLong(x);
