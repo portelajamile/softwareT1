@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 /*Jamile Baptista Campana Portela - 1412973*/
 /*Rudá Fraga Valle - COLOCAR SUA MATRICULA AQUI*/
 
+=======
+//RUDÁ FRAGA VALLE - 1411101
+>>>>>>> origin/master
 #include "int128.h"
 #include <stdlib.h> 
 #include <math.h>
@@ -129,6 +133,7 @@ void int128_sub (Int128 *res, Int128 *v1, Int128 *v2)
 }
 
 void int128_shl (Int128 *res, Int128 *v, int n)
+<<<<<<< HEAD
 {	// realiza o shift left (lógico) de n bits em um Int128bits
 	long j,arm;
 	int x = 8*sizeof(long);		//calcula tamanho em bits do long
@@ -141,6 +146,21 @@ void int128_shl (Int128 *res, Int128 *v, int n)
 	}
 
 	else if (n >= x)
+=======
+{
+	long j,arm;
+	//shift menor que 64bits
+	if (n < 64)
+	{
+		j = v->low;
+		//shift para direita para obter o valor que vai para o high
+		arm = (j>>(64-n));
+		res->low = (v->low << n);
+		res->high = (v->high << n) + arm;
+	}
+	//shift maior que 64 bits
+	else if (n >= 64)
+>>>>>>> origin/master
 	{
 		res->low = (v->low << n);
 		n = n - x;
@@ -184,6 +204,7 @@ void int128_shr (Int128 *res, Int128 *v, int n)
 }
 
 int int128_write(Int128 *v, FILE *f)
+<<<<<<< HEAD
 {	// grava um Int128bits em arquivo binario
 //	int n = sizeof(v);
 	long x, y;
@@ -203,6 +224,32 @@ int int128_write(Int128 *v, FILE *f)
 	while (n--) {
 		fprintf(f, "%02x", *p1);
 		p1++;
+=======
+{
+	long x, y;
+	int n = sizeof(v);
+	//se for a mquina for little endian faz swap do valor
+	if (is_little_endian()==0) {
+		//swap dos valores de big endian para little endian
+			x = swapLong(v->high);
+			y = swapLong(v->low);
+			v->high = x;
+			v->low = y;
+		unsigned char *p1 = v;
+		while (n--) {
+			fwrite(p1, sizeof(v), 1, f);
+			p1++;
+		}
+	}
+	//se a maquina for big endian imprime do jeito que estiver
+	else if(is_little_endian()==1)
+	{
+		unsigned char *p1 = v;
+		while (n--) {
+			fwrite(p1, sizeof(v), 1, f);
+			p1++;
+		}
+>>>>>>> origin/master
 	}
 */
 	return 0;
@@ -216,7 +263,11 @@ int int128_read(Int128 *v, FILE *f)
 		printf("Erro no arquivo");
 		return 1;
 	}
+	//se a maquina for little endian faz swap do valor recebido
+	if (is_little_endian() == 0)
+	{
 
+<<<<<<< HEAD
 //	fscanf(f, "%08x %08x",&x, &y);
 	fscanf(f, "%08ld %08ld",&x, &y); 
 	
@@ -229,5 +280,23 @@ int int128_read(Int128 *v, FILE *f)
 	v->high = x;
 
 	return 0;
+=======
+		fread(v, sizeof(v), 1, f);
+		//swap dos valore de big endian para little endian
+		x = swapLong(v->high);
+		y = swapLong(v->low);
+
+		v->high = x;
+		v->low = y;
+		return 0;
+	}
+	//se a amquina for big endian recebe o valor do jeito que estiver
+	else if (is_little_endian()==1)
+	{
+		fread(v, sizeof(v), 1, f);
+		return 0;
+	}
+	return 1;
+>>>>>>> origin/master
 }
 
