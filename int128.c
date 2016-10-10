@@ -185,22 +185,27 @@ void int128_shr (Int128 *res, Int128 *v, int n)
 
 int int128_write(Int128 *v, FILE *f)
 {	// grava um Int128bits em arquivo binario
-	int n = sizeof(v);
+//	int n = sizeof(v);
 	long x, y;
 	
 	//corrige a ordenação para Little Endian
 	x = swapLong(v->high);
 	y = swapLong(v->low);
 	
-	v->high = x;
+	//grava o valor	
+	dump(&x, sizeof(x), f);
+	dump(&y, sizeof(y), f);
+	
+/*	v->high = x;
 	v->low = y;
-	//grava o valor
+	
 	unsigned char *p1 = v;
 	while (n--) {
 		fprintf(f, "%02x", *p1);
 		p1++;
 	}
-return 0;
+*/
+	return 0;
 }
 
 int int128_read(Int128 *v, FILE *f)
@@ -212,7 +217,9 @@ int int128_read(Int128 *v, FILE *f)
 		return 1;
 	}
 
-	fscanf(f, "%08x %08x",&x, &y);
+//	fscanf(f, "%08x %08x",&x, &y);
+	fscanf(f, "%08ld %08ld",&x, &y); 
+	
 	
 	// corrige a ordenação para Big Endian
 	x = swapLong(x);
