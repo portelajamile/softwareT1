@@ -42,8 +42,11 @@ void dump(void *p, int n,FILE* f) {
 
 int is_little_endian()
 {
-	//ADICIONAR IMPLEMENTAÇÃO
-	return 0;
+	int n = 1;
+	// little endian if true
+	if (*(char *)&n == 1)
+		return 0;
+	return 1;
 }
 
 
