@@ -2,6 +2,7 @@
 #include <stdlib.h> 
 #include <math.h>
 
+
 /*Auxiliares p teste*/
 long getHigh (Int128 *a)
 { return a->high;}
@@ -9,9 +10,9 @@ long getLow (Int128 *a)
 { return a->low;}
 
 /*Funções auxiliares */ 
-int calcMax (void)
-{
-	return pow(2,sizeof(long)-1);
+long calcMax (void)
+{ 
+	return (long) pow(2,8*sizeof(long)-1);
 }
 
 long swapLong(long in)
@@ -41,15 +42,11 @@ void dump(void *p, int n,FILE* f) {
 
 void int128_attr (Int128 *res, long l)
 {	// extende com sinal (como o comando movz de assembly)
-		if(l>0){
-		res->high =0;
-		res->low = l;	
-	}
-	else {
+		if(l<0)
 		res->high =-1;
-		res->low = l;	
-	}
-		
+	else 
+		res->high =0;
+	res->low = l;		
 }
 
 void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
@@ -95,7 +92,7 @@ void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
 	
 	if(s==0 && t==0){					// v1 e v2 são sinal 
 		if (d==0)
-			res->high= (res->low > 0)? 0:-1;
+			res->high= (res->low >= 0)? 0:-1;
 		else
 			res->high = d;
 	}
@@ -112,6 +109,18 @@ void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
 
 void int128_sub (Int128 *res, Int128 *v1, Int128 *v2)
 {
+	Int128 a;
+	if(v2-> high == -1){
+		a.high = 0;
+		if(v2->low < 0)
+			a.low= - v2->low;
+		}
+	if(v2->high == 0){
+		a.high = -1;
+		if(v2->low >0)
+			a.low = -v2->low;
+	}
+	int128_add(res, v1, &a);
 }
 
 void int128_shl (Int128 *res, Int128 *v, int n)
@@ -179,3 +188,4 @@ int int128_read(Int128 *v, FILE *f)
 
 	return 0;
 }
+
