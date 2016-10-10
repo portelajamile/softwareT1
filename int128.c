@@ -147,19 +147,34 @@ void int128_shl (Int128 *res, Int128 *v, int n)
 void int128_shr (Int128 *res, Int128 *v, int n)
 {
 	long a,b;
-	if(n<64){
-		a = v->high << (64-n);
-		res->high = a >> n;
-		b = v->low << (64-n);
-		res->low = (b >> (64-n) & a );
+	int x= 8*sizeof(long);
+	
+//se n menor que 8* sizeof(long)
+	if(n < x ){
+//move parte do high p o low
+		a = v->high << (x-n);
+		b = v->low >> n;
+		res->low = ( a | b );
+		
+// acerta o high em fçc do low
+		if( res->low < 0)
+			res->high = (v->high >> n | -1);
+		else 
+			res->high = (v->high >> n | 0);
 	}
-	else{
-		a = v->high >> (128-n);
-		res->low = a;
-		if(a>=0)
+// se n maior que 8*sizeof(long)
+	else {
+		a= v->high << (2*x-n) ; // n-x = bits de interesse no high ; x-(n-x) bits a serem deslocados p obter o filtro 
+//usa o filtro e o sinal para obter o low e o high
+		if(a < 0){
+			res->low= ( a | -1 );
+			res->high = -1;
+		}		
+		else{
+			res->low = ( a | 0 );
 			res->high = 0;
-		else
-			res->high = -1;		
+		}
+		
 	}
 }
 
