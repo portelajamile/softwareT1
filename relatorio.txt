@@ -1,12 +1,43 @@
 /*Jamile Baptista Campana Portela - 1412973*/
-/*Rudá Fraga Valle - COLOCAR SUA MATRICULA AQUI*/
-
-Todas as funções implementadas funcionaram corretamente para os valores testados. 
-Em cada uma das funções foram testados valores positivos e negativos, com diferentes 
-tamanhos em bytes.
+/*Rudá Fraga Valle - 1411101*/
 
 Os computadores utilizados para desenvolver e testar o módulo Int128bits, uma máquina
  de 32 bits e uma de 64 bits, apresentam long int de 4 bytes. Dito isto, os Int128bits 
 usados tinham, na verdade, 64 bits e não 128 bits. Sabendo disso, a implementação foi 
 realizada visando o funcionamento nos dois casos, com long de 16 ou 32 bits. No entanto, 
 apenas foi testado o caso do long de 16 bits.
+
+Funcionando
+	int128_attr
+		valores de entrada : 0x87654321 , 0xFFFFFFFF, 0x0000000, 0x563F...
+		foram testados valores positivos, negativos, 0 e extremos do intervalo
+	int128_add
+		valores de entrada : 0x87654321 + 0xFFFFFFFF, 0xFFFFFFFF + 0x0000001, 0x563F + 0x87654321 ...
+		foi testada a soma de valores com sinal diferente e principalmente somas que ultrapassavam o sizeof(long)
+		também foram testadas somas em sequência, i.e. usando o resultado da soma anterior.
+	int128_sub
+		valores de entrada : 0x87654321 + 0xFFFFFFF1, 0xFFFFFFFF + 0x0000001, 0x563F + 0x87654321 ...
+		foi testada a subtração de valores com sinal diferente
+		foram testadas subtrações em sequência, i.e. usando o resultado da subtração anterior.
+	int128_shr
+		valores de entrada:  0x87654321 , 0xFFFFFFFF, 0x0000000, 0xCD12...
+		valores de n testados: 24, 40, 30...
+		o foco foi testar a execução correta em valores menores que 0 e usar valores maiores e menores que o sizeof (long)
+	
+	int128_shl
+		valor de entrada em hex(big endian): high->f045e602 low->856d4e56
+		shiftado 4 bytes para esquerda
+		valor de saida em hex(big endian): highe->602856d low->4e5600
+
+	int128_write
+		valor de entrada em hex(big endian): high->ffffffff low->4224bafe
+
+		valor de saida:ÿÿÿÿÿÿÿþÿÿþºÿþº$
+
+Não Funcionando
+	int128_read
+
+		
+
+
+
