@@ -1,6 +1,6 @@
 #include "int128.h"
 #include <stdlib.h> 
-#define NMAX 4294967295
+#include <math.h>
 
 /*Auxiliares p teste*/
 long getHigh (Int128 *a)
@@ -9,6 +9,10 @@ long getLow (Int128 *a)
 { return a->low;}
 
 /*Funções auxiliares */ 
+int calcMax (void)
+{
+	return pow(2,sizeof(long)-1);
+}
 
 long swapLong(long in)
 {
@@ -50,23 +54,24 @@ void int128_attr (Int128 *res, long l)
 
 void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
 {	//soma dois inteiros de 128 bits 
-	int s=1, t=1, d=0;
-	
+	int s=1, t=1, d=0, nmax;
+	nmax=calcMax();
+		
 	if(v1->high<0 && v1->low>0)			//corrige sinal caso v1 seja neg
 		s=-1;
 	if(v2->high<0 && v2->low>0)			//corrige sinal caso v2 seja neg
 		t=-1;
 	
 //soma o low		
-	if( abs( s*v1->low+t*v2->low ) > NMAX )	{
+	if( abs( s*v1->low+t*v2->low ) > nmax )	{
 		// OVERFLOW
 		if(s*v1->low+t*v2->low <0){
-			d=s*v1->low+t*v2->low + NMAX;
-			res->high=-NMAX;
+			d=s*v1->low+t*v2->low + nmax;
+			res->high=-nmax;
 		}
 		else{ 
-			d=s*v1->low+t*v2->low - NMAX;
-			res->high = NMAX;
+			d=s*v1->low+t*v2->low - nmax;
+			res->high = nmax;
 		}
 	}
 	else
@@ -76,9 +81,9 @@ void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
 
 	s=1; t=1;
 	
-	if(v1->high == -1 || v1->high==0){		//v1 representa sinal
+	if(v1->high == -1 || v1->high==0)		//v1 representa sinal
 		s=0; 
-	if(v2->high == -1 || v2->high==0){		//v2 representa sinal
+	if(v2->high == -1 || v2->high==0)		//v2 representa sinal
 		t=0;
 		
 	if( res->low < 0 ){					// res é negativo
@@ -96,10 +101,10 @@ void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
 	}
 	
 	else {								// v1 e v2 são valores 
-		if( abs ( s*v1->high + t*v2->high + d ) > NMAX) {
+		if( abs ( s*v1->high + t*v2->high + d ) > nmax) {
 			//OVERFLOW
-			res->high=res->low=NULL;
-			printf("Overflow! Nao foi possivel armazenar a soma dos inteiros de 128bits.")
+			res->high=res->low=0;
+			printf("Overflow! Nao foi possivel armazenar a soma dos inteiros de 128bits.");
 		}
 		res->high = s*v1->high + t*v2->high + d ;
 	}
