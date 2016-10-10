@@ -117,11 +117,15 @@ void int128_shr (Int128 *res, Int128 *v, int n)
 
 int int128_write(Int128 *v, FILE *f)
 {
+	int n = sizeof(v);
 	long x, y;
 	x = swapLong(v->high);
-	y = swapLong(v->low);
-	dump(x, sizeof(x), f);
-	dump(y, sizeof(y), f);
+	y = swapLong(v->low); 
+	unsigned char *p1 = v;
+	while (n--) {
+		fprintf(f, "%02x", *p1);
+		p1++;
+	}
 return 0;
 }
 
@@ -134,12 +138,14 @@ int int128_read(Int128 *v, FILE *f)
 		return 1;
 	}
 	
-	fscanf(f, "%l %l", &x, &y);
+	fscanf(f, "%08x", &x);
 	x = swapLong(x);
 	y = swapLong(y);
 
-	v->high = x;
-	v->low = y;
+	v->low = x;
+	v->high = y;
+	v->high = y << 31;
+
 
 	return 0;
 }
