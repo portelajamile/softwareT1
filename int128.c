@@ -168,7 +168,9 @@ int int128_write(Int128 *v, FILE *f)
 	int n = sizeof(v);
 	long x, y;
 	x = swapLong(v->high);
-	y = swapLong(v->low); 
+	y = swapLong(v->low);
+	v->high = x;
+	v->low = y;
 	unsigned char *p1 = v;
 	while (n--) {
 		fprintf(f, "%02x", *p1);
