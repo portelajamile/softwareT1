@@ -146,9 +146,21 @@ void int128_shl (Int128 *res, Int128 *v, int n)
 
 void int128_shr (Int128 *res, Int128 *v, int n)
 {
-	
-	
-	
+	long a,b;
+	if(n<64){
+		a = v->high << (64-n);
+		res->high = a >> n;
+		b = v->low << (64-n);
+		res->low = (b >> (64-n) & a );
+	}
+	else{
+		a = v->high >> (128-n);
+		res->low = a;
+		if(a>=0)
+			res->high = 0;
+		else
+			res->high = -1;		
+	}
 }
 
 int int128_write(Int128 *v, FILE *f)
