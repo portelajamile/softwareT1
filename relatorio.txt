@@ -1,0 +1,12 @@
+/*Jamile Baptista Campana Portela - 1412973*/
+/*Rudá Fraga Valle - COLOCAR SUA MATRICULA AQUI*/
+
+Todas as funções implementadas funcionaram corretamente para os valores testados. 
+Em cada uma das funções foram testados valores positivos e negativos, com diferentes 
+tamanhos em bytes.
+
+Os computadores utilizados para desenvolver e testar o módulo Int128bits, uma máquina
+ de 32 bits e uma de 64 bits, apresentam long int de 4 bytes. Dito isto, os Int128bits 
+usados tinham, na verdade, 64 bits e não 128 bits. Sabendo disso, a implementação foi 
+realizada visando o funcionamento nos dois casos, com long de 16 ou 32 bits. No entanto, 
+apenas foi testado o caso do long de 16 bits.
