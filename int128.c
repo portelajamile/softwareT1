@@ -14,12 +14,12 @@ long getLow (Int128 *a)
 
 /*Funções auxiliares */ 
 long calcMax (void)
-{ 
+{ //calcula valor maximo que pode ser armazenado no long 
 	return (long) pow(2,8*sizeof(long)-1);
 }
 
 long swapLong(long in)
-{
+{	//inverte a ordenação de bytes
 	long out;
 	char *inp = (char *)&in;
 	char *outp = (char *)&out;
@@ -111,8 +111,9 @@ void int128_add (Int128 *res, Int128 *v1, Int128 *v2)
 }
 
 void int128_sub (Int128 *res, Int128 *v1, Int128 *v2)
-{
+{	//subtrai v2 de v1
 	Int128 a;
+	// a= -v2;
 	if(v2-> high == -1){
 		a.high = 0;
 		if(v2->low < 0)
@@ -123,14 +124,14 @@ void int128_sub (Int128 *res, Int128 *v1, Int128 *v2)
 		if(v2->low >0)
 			a.low = -v2->low;
 	}
+	// soma (v1+ a) = v1 + (-v2) 
 	int128_add(res, v1, &a);
 }
 
 void int128_shl (Int128 *res, Int128 *v, int n)
-{
-//	int i;
+{	// realiza o shift left (lógico) de n bits em um Int128bits
 	long j,arm;
-	int x = 8*sizeof(long);
+	int x = 8*sizeof(long);		//calcula tamanho em bits do long
 	if (n < x)
 	{
 		j = v->low;
@@ -149,18 +150,18 @@ void int128_shl (Int128 *res, Int128 *v, int n)
 }
 
 void int128_shr (Int128 *res, Int128 *v, int n)
-{
+{	// realiza o shift right (aritmetico) de n bits em um Int128bits
 	long a,b;
-	int x= 8*sizeof(long);
+	int x= 8*sizeof(long);		//calcula o tamanho em bits do long
 	
 //se n menor que 8* sizeof(long)
 	if(n < x ){
-//move parte do high p o low
+//move parte do high para o low
 		a = v->high << (x-n);
 		b = v->low >> n;
 		res->low = ( a | b );
 		
-// acerta o high em fçc do low
+// acerta o high em fç do sinal do low
 		if( res->low < 0)
 			res->high = (v->high >> n | -1);
 		else 
@@ -168,8 +169,8 @@ void int128_shr (Int128 *res, Int128 *v, int n)
 	}
 // se n maior que 8*sizeof(long)
 	else {
-		a= v->high << (2*x-n) ; // n-x = bits de interesse no high ; x-(n-x) bits a serem deslocados p obter o filtro 
-//usa o filtro e o sinal para obter o low e o high
+		a= v->high << (2*x-n) ; // n-x = bits de interesse no high ; x-(n-x) bits a serem deslocados p obter a mascara
+//usa a mascara e o sinal para obter o low e o high
 		if(a < 0){
 			res->low= ( a | -1 );
 			res->high = -1;
@@ -183,13 +184,17 @@ void int128_shr (Int128 *res, Int128 *v, int n)
 }
 
 int int128_write(Int128 *v, FILE *f)
-{
+{	// grava um Int128bits em arquivo binario
 	int n = sizeof(v);
 	long x, y;
+	
+	//corrige a ordenação para Little Endian
 	x = swapLong(v->high);
 	y = swapLong(v->low);
+	
 	v->high = x;
 	v->low = y;
+	//grava o valor
 	unsigned char *p1 = v;
 	while (n--) {
 		fprintf(f, "%02x", *p1);
@@ -199,7 +204,7 @@ return 0;
 }
 
 int int128_read(Int128 *v, FILE *f)
-{
+{	//le um Int128bits em arquivo binario
 	long x, y;
 	if (f == NULL)
 	{
@@ -208,12 +213,13 @@ int int128_read(Int128 *v, FILE *f)
 	}
 
 	fscanf(f, "%08x %08x",&x, &y);
+	
+	// corrige a ordenação para Big Endian
 	x = swapLong(x);
 	y = swapLong(y);
 
 	v->low = y;
 	v->high = x;
-
 
 	return 0;
 }
