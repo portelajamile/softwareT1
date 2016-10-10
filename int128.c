@@ -221,6 +221,22 @@ int int128_read(Int128 *v, FILE *f)
 		printf("Erro no arquivo");
 		return 1;
 	}
+//JAMILE - ALTEREI AQUI
+	
+	fread(x, sizeof(x), 1, f);
+	fread(y, sizeof(y), 1, f);
+	if(is_little_endian() == 0){
+		v->high = swapLong(y);
+		v->low = swapLong(x);
+		return 0;
+	}
+	else if (is_little_endian()==1){
+		v->high = x; 
+		v->low = y;
+		return 0;
+	}
+
+/*
 	//se a maquina for little endian faz swap do valor recebido
 	if (is_little_endian() == 0)
 	{
@@ -239,6 +255,8 @@ int int128_read(Int128 *v, FILE *f)
 		fread(v, sizeof(v), 1, f);
 		return 0;
 	}
+*/
+//JAMILE - PAREI AQUI
 	return 1;
 }
 
