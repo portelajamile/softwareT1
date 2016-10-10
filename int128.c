@@ -170,20 +170,19 @@ return 0;
 
 int int128_read(Int128 *v, FILE *f)
 {
-		long x, y;
+	long x, y;
 	if (f == NULL)
 	{
 		printf("Erro no arquivo");
 		return 1;
 	}
-	
-	fscanf(f, "%08x", &x);
+
+	fscanf(f, "%08x %08x",&x, &y);
 	x = swapLong(x);
 	y = swapLong(y);
 
-	v->low = x;
-	v->high = y;
-	v->high = y << 31;
+	v->low = y;
+	v->high = x;
 
 
 	return 0;
