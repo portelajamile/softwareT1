@@ -181,16 +181,26 @@ void int128_shr (Int128 *res, Int128 *v, int n)
 
 int int128_write(Int128 *v, FILE *f)
 {
-	int n = sizeof(v);
 	long x, y;
-	x = swapLong(v->high);
-	y = swapLong(v->low);
-	v->high = x;
-	v->low = y;
-	unsigned char *p1 = v;
-	while (n--) {
-		fprintf(f, "%02x", *p1);
-		p1++;
+	int n = sizeof(v);
+	if (is_little_endian()==0) {
+			x = swapLong(v->high);
+			y = swapLong(v->low);
+			v->high = x;
+			v->low = y;
+		unsigned char *p1 = v;
+		while (n--) {
+			fwrite(p1, sizeof(v), 1, f);
+			p1++;
+		}
+	}
+	else if(is_little_endian()==1)
+	{
+		unsigned char *p1 = v;
+		while (n--) {
+			fwrite(p1, sizeof(v), 1, f);
+			p1++;
+		}
 	}
 return 0;
 }
@@ -204,14 +214,23 @@ int int128_read(Int128 *v, FILE *f)
 		return 1;
 	}
 
-	fscanf(f, "%08x %08x",&x, &y);
-	x = swapLong(x);
-	y = swapLong(y);
+	if (is_little_endian() == 0)
+	{
 
-	v->low = y;
-	v->high = x;
+		fread(v, sizeof(v), 1, f);
 
+		x = swapLong(v->high);
+		y = swapLong(v->low);
 
-	return 0;
+		v->high = x;
+		v->low = y;
+		return 0;
+	}
+	else if (is_little_endian()==1)
+	{
+		fread(v, sizeof(v), 1, f);
+		return 0;
+	}
+	return 1;
 }
 
