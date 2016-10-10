@@ -88,22 +88,20 @@ void int128_shl (Int128 *res, Int128 *v, int n)
 {
 	int i;
 	long j,arm;;
-	if (n < 32)
+	if (n < 64)
 	{
 		j = v->low;
-		arm = (j>>(32-n));
+		arm = (j>>(64-n));
 		res->low = (v->low << n);
 		exibeInt(res);
 		res->high = (v->high << n) + arm;
 		exibeInt(res);
 	}
 
-	else if (n >= 32)
+	else if (n >= 64)
 	{
-		res->low = (v->low << 31);
-		res->low = (res->low << 31);
-		res->low = (res->low << 2);
-		n = n - 32;
+		res->low = (v->low << n);
+		n = n - 64;
 		arm = v->low;
 		res->high = (arm << n);
 		exibeInt(res);
