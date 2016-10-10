@@ -1,9 +1,12 @@
+/*Jamile Baptista Campana Portela - 1412973*/
+/*Rudá Fraga Valle - COLOCAR SUA MATRICULA AQUI*/
+
 #include "int128.h"
 #include <stdlib.h> 
 #include <math.h>
 
 
-/*Auxiliares p teste*/
+/*Auxiliares p teste - REMOVER */
 long getHigh (Int128 *a)
 { return a->high;}
 long getLow (Int128 *a)
@@ -125,20 +128,21 @@ void int128_sub (Int128 *res, Int128 *v1, Int128 *v2)
 
 void int128_shl (Int128 *res, Int128 *v, int n)
 {
-	int i;
-	long j,arm;;
-	if (n < 64)
+//	int i;
+	long j,arm;
+	int x = 8*sizeof(long);
+	if (n < x)
 	{
 		j = v->low;
-		arm = (j>>(64-n));
+		arm = (j>>(x-n));
 		res->low = (v->low << n);
 		res->high = (v->high << n) + arm;
 	}
 
-	else if (n >= 64)
+	else if (n >= x)
 	{
 		res->low = (v->low << n);
-		n = n - 64;
+		n = n - x;
 		arm = v->low;
 		res->high = (arm << n);
 	}
